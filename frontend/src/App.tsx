@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import ProjectDashboard from './pages/dashboard/ProjectDashboard';
 import MemberManagement from './pages/dashboard/MemberManagement';
+import ProductBacklog from './pages/backlog/ProductBacklog';
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/dashboard" element={<ProjectDashboard />} />
         <Route path="/members" element={<MemberManagement />} />
+        <Route path="/backlog" element={<ProductBacklog />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
