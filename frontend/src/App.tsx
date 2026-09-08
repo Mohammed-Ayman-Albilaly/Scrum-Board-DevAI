@@ -5,6 +5,7 @@ import SignUpPage from './pages/SignUpPage';
 import ProjectDashboard from './pages/dashboard/ProjectDashboard';
 import MemberManagement from './pages/dashboard/MemberManagement';
 import ProductBacklog from './pages/backlog/ProductBacklog';
+import SprintPlanning from './pages/sprint/SprintPlanning';
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <Route path="/dashboard" element={<ProjectDashboard />} />
         <Route path="/members" element={<MemberManagement />} />
         <Route path="/backlog" element={<ProductBacklog />} />
+        <Route path="/sprint-planning" element={<SprintPlanning />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
