@@ -35,6 +35,8 @@ public class UserStory {
     @Enumerated(EnumType.STRING)
     private ColumnStatus columnStatus;
 
+    private UUID currentSprintId;
+
     public enum StoryStatus {
         UNREFINED,
         READY

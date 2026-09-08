@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface UserStoryRepository extends JpaRepository<UserStory, UUID> {
     List<UserStory> findByProjectIdOrderByPriorityAsc(UUID projectId);
+    List<UserStory> findByCurrentSprintId(UUID sprintId);
 }
