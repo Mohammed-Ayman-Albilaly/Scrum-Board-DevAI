@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-brand-neutral-bg text-brand-blue-dark;
+  font-family: 'Inter', sans-serif;
+}

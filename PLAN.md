@@ -12,7 +12,27 @@ ScrumBoard is a role-enforced project management tool designed to prevent "proce
 ### Stack
 - **Backend:** Java 17+, Spring Boot 3.x
 - **Frontend:** React 18+, TypeScript, Tailwind CSS
+- **Design System:** "AgriTech Modern" (Professional, clean, organic)
 - **Database:** PostgreSQL (Relational data for strict consistency)
+## 2.1 Frontend Design System (AgriTech Modern)
+To achieve a professional yet agricultural vibe, the UI will follow an "AgriTech" aesthetic: clean, data-driven, and organic.
+
+### Color Palette (Tailwind Customization)
+- **Primary Green (Growth):** `emerald-600` (Main actions), `emerald-900` (Deep accents).
+- **Secondary Blue (Trust/Tech):** `sky-700` (Links, Primary Nav), `slate-800` (Deep text/contrast).
+- **Accent Orange (Harvest/Energy):** `orange-500` (Highlights, CTAs, Warnings).
+- **Neutrals:** `slate-50` (App background), `stone-100` (Card backgrounds).
+
+### Visual Guidelines
+- **Typography:** Clean Sans-Serif (Inter/Geist) for a technical feel.
+- **Shapes:** Softly rounded corners (`rounded-xl`) to maintain an organic feel.
+- **Components:** 
+    - **Cards:** Thin borders (`border-slate-200`) with subtle shadows.
+    - **Buttons:** Defined variants: `Primary` (Green), `Secondary` (Blue), `Accent` (Orange).
+    - **Icons:** Line-art style (Lucide React) for professional clarity.
+
+---
+
 - **Security:** Spring Security, JWT (Stateless Authentication)
 - **API:** RESTful API with OpenAPI/Swagger documentation
 
