@@ -32,7 +32,7 @@ type Sprint = {
 const SprintPlanning: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [userRole, setUserRole] = React.useState<'SCRUM_MASTER' | 'PRODUCT_OWNER' | 'TEAM_MEMBER'>('SCRUM_MASTER');
+  const [userRole] = React.useState<'SCRUM_MASTER' | 'PRODUCT_OWNER' | 'TEAM_MEMBER'>('SCRUM_MASTER');
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 

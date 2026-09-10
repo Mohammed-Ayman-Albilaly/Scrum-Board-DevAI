@@ -8,7 +8,6 @@ import {
   Edit2, 
   Trash2, 
   AlertCircle, 
-  CheckCircle2, 
   ChevronRight,
   LayoutGrid
 } from 'lucide-react';
@@ -82,7 +81,7 @@ const StoryCard: React.FC<{
 const ProductBacklog: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [userRole, setUserRole] = React.useState<'PRODUCT_OWNER' | 'TEAM_MEMBER'>('PRODUCT_OWNER');
+  const [userRole] = React.useState<'PRODUCT_OWNER' | 'TEAM_MEMBER'>('PRODUCT_OWNER');
   
   const [stories, setStories] = React.useState<UserStory[]>([]);
   const [loading, setLoading] = React.useState(true);

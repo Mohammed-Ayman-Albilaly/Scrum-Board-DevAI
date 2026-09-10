@@ -29,7 +29,7 @@ type Sprint = {
 
 const DeployedArchive: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const [userRole, setUserRole] = React.useState<'SCRUM_MASTER' | 'PRODUCT_OWNER' | 'TEAM_MEMBER'>('SCRUM_MASTER');
+  const [userRole] = React.useState<'SCRUM_MASTER' | 'PRODUCT_OWNER' | 'TEAM_MEMBER'>('SCRUM_MASTER');
   const [sprints, setSprints] = React.useState<Sprint[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -151,7 +151,7 @@ const DeployedArchive: React.FC = () => {
           )}
         </div>
       )}
-    </div>
+    </div
   );
 };
 
