@@ -73,4 +73,30 @@ public class SprintService {
                 .mapToInt(UserStory::getStoryPoints)
                 .sum();
     }
+
+    @Transactional
+    public void closeSprint(UUID sprintId) {
+        Sprint sprint = sprintRepository.findById(sprintId)
+                .orElseThrow(() -> new RuntimeException("Sprint not found"));
+        
+        if (sprint.isClosed()) {
+            throw new RuntimeException("Sprint is already closed");
+        }
+
+        // 1. Lock the sprint
+        sprint.setClosed(true);
+        sprintRepository.save(sprint);
+
+        // 2. Move non-deployed stories back to Product Backlog
+        List<UserStory> sprintStories = storyRepository.findByCurrentSprintId(sprintId);
+        for (UserStory story : sprintStories) {
+            if (story.getColumnStatus() != UserStory.ColumnStatus.DEPLOYED) {
+                story.setCurrentSprintId(null);
+                story.setColumnStatus(UserStory.ColumnStatus.SPRINT_BACKLOG);
+                // Note: story.setStatus(UserStory.StoryStatus.READY) could be added if we want to keep them ready
+                storyRepository.save(story);
+            }
+        }
+    }
+
 }

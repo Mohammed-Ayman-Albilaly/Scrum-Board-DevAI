@@ -47,4 +47,13 @@ public class SprintController {
         Sprint active = sprintService.getActiveSprint();
         return ResponseEntity.ok(sprintService.calculateCommittedPoints(active.getId()));
     }
+
+    @PostMapping("/{sprintId}/close")
+    public ResponseEntity<?> closeSprint(@PathVariable UUID sprintId, @RequestParam UUID projectId) {
+        if (!securityChecker.hasRole(projectId, "SCRUM_MASTER")) {
+            throw new AccessDeniedException("Only Scrum Masters can close sprints");
+        }
+        sprintService.closeSprint(sprintId);
+        return ResponseEntity.ok().build();
+    }
 }
