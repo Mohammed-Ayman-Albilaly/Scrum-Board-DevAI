@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from './components/ui/Button';
-import { Card } from './components/ui/Card';
-import { Input } from './components/ui/Input';
+import { Button } from './Button';
+import { Card } from './Card';
+import { Input } from './Input';
 
 export { Button, Card, Input };

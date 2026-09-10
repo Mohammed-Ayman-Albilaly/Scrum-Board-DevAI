@@ -1,3 +1,5 @@
+import apiClient from '../services/api';
+
 import React from 'react';
 import { Card, Button, Input } from '../components/ui';
 import { UserPlus } from 'lucide-react';
@@ -29,10 +31,18 @@ const SignUpPage: React.FC = () => {
     return true;
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    console.log('Sign up attempt:', formData);
+
+    try {
+      const response = await apiClient.post('/auth/signup', formData);
+      if (response.status === 200 || response.status === 201) {
+        window.location.href = '/login';
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'An error occurred during sign up');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

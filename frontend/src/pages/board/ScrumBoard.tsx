@@ -1,13 +1,16 @@
 import React from 'react';
-import { Card, Button } from '../components/ui';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
 import { 
-  Trello, 
+  Kanban, 
   ChevronRight, 
   ChevronLeft, 
   CheckCircle2, 
   Clock, 
   LayoutGrid 
 } from 'lucide-react';
+import apiClient from '../../services/api';
+import { useParams } from 'react-router-dom';
 
 type ColumnStatus = 'SPRINT_BACKLOG' | 'UNDER_DEVELOPMENT' | 'UNDER_TESTING' | 'DEPLOYED';
 
@@ -65,16 +68,30 @@ const BoardStoryCard: React.FC<{
 };
 
 const ScrumBoard: React.FC = () => {
-  const [stories, setStories] = React.useState<UserStory[]>([
-    { id: '1', title: 'JWT Authentication', description: 'Secure API endpoints', storyPoints: 5, columnStatus: 'SPRINT_BACKLOG' },
-    { id: '2', title: 'Project Gallery UI', description: 'Dashboard view', storyPoints: 3, columnStatus: 'UNDER_DEVELOPMENT' },
-    { id: '3', title: 'RBAC Middleware', description: 'Project level access', storyPoints: 8, columnStatus: 'UNDER_TESTING' },
-    { id: '4', title: 'Postgres Indexing', description: 'DB optimization', storyPoints: 2, columnStatus: 'DEPLOYED' },
-  ]);
+  const { projectId } = useParams<{ projectId: string }>();
+  const [stories, setStories] = React.useState<UserStory[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchStories = async () => {
+      if (!projectId) return;
+      try {
+        setLoading(true);
+        const response = await apiClient.get(`/projects/${projectId}/stories`);
+        setStories(response.data);
+      } catch (err: any) {
+        setError(err.response?.data?.message || 'Failed to fetch stories');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStories();
+  }, [projectId]);
 
   const moveStory = async (id: string, direction: 'next' | 'prev') => {
     const story = stories.find(s => s.id === id);
-    if (!story) return;
+    if (!story || !projectId) return;
 
     const currentIndex = COLUMNS.findIndex(c => c.id === story.columnStatus);
     let nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
@@ -83,21 +100,15 @@ const ScrumBoard: React.FC = () => {
       const newStatus = COLUMNS[nextIndex].id;
       
       try {
-        // In a real scenario, projectId would be retrieved from current project context/URL
-        const projectId = 'some-project-id'; 
-        await fetch(`/api/projects/${projectId}/stories/${id}/transition?status=${newStatus}`, {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
+        await apiClient.patch(`/projects/${projectId}/stories/${id}/transition`, {
+          status: newStatus
         });
         
         setStories(prev => prev.map(s => 
           s.id === id ? { ...s, columnStatus: newStatus } : s
         ));
-      } catch (error) {
-        console.error('Failed to move story:', error);
+      } catch (error: any) {
+        alert('Failed to move story: ' + (error.response?.data?.message || error.message));
       }
     }
   };
@@ -107,11 +118,11 @@ const ScrumBoard: React.FC = () => {
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-brand-green rounded-lg text-white">
-            <Trello size={24} />
+            <Kanban size={24} />
           </div>
           <div>
             <h1 className="text-3xl font-bold text-brand-blue-dark">Scrum Board</h1>
-            <p className="text-slate-500 text-sm">Sprint 1: Core Infrastructure</p>
+            <p className="text-slate-500 text-sm">Managing Project: {projectId}</p>
           </div>
         </div>
         
@@ -127,35 +138,45 @@ const ScrumBoard: React.FC = () => {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
-        {COLUMNS.map(col => (
-          <div key={col.id} className="flex flex-col h-full">
-            <div className={`flex items-center justify-between px-3 py-2 rounded-t-xl font-bold text-xs uppercase tracking-wider ${col.color}`}>
-              <div className="flex items-center gap-2">
-                <LayoutGrid size={14} />
-                {col.label}
-              </div>
-              <span className="bg-white/50 px-2 py-0.5 rounded-full">
-                {stories.filter(s => s.columnStatus === col.id).length}
-              </span>
-            </div>
-            <div className="flex-1 bg-slate-200/30 p-3 rounded-b-xl overflow-y-auto space-y-3 border-x border-b border-slate-200">
-              {stories.filter(s => s.columnStatus === col.id).map(story => (
-                <BoardStoryCard 
-                  key={story.id} 
-                  story={story} 
-                  onMove={moveStory} 
-                />
-              ))}
-              {stories.filter(s => s.columnStatus === col.id).length === 0 && (
-                <div className="text-center py-10 text-slate-400 text-xs italic">
-                  No stories in this column
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <p className="text-slate-500">Loading stories...</p>
+        </div>
+      ) : error ? (
+        <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-center">
+          {error}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
+          {COLUMNS.map(col => (
+            <div key={col.id} className="flex flex-col h-full">
+              <div className={`flex items-center justify-between px-3 py-2 rounded-t-xl font-bold text-xs uppercase tracking-wider ${col.color}`}>
+                <div className="flex items-center gap-2">
+                  <LayoutGrid size={14} />
+                  {col.label}
                 </div>
-              )}
+                <span className="bg-white/50 px-2 py-0.5 rounded-full">
+                  {stories.filter(s => s.columnStatus === col.id).length}
+                </span>
+              </div>
+              <div className="flex-1 bg-slate-200/30 p-3 rounded-b-xl overflow-y-auto space-y-3 border-x border-b border-slate-200">
+                {stories.filter(s => s.columnStatus === col.id).map(story => (
+                  <BoardStoryCard 
+                    key={story.id} 
+                    story={story} 
+                    onMove={moveStory} 
+                  />
+                ))}
+                {stories.filter(s => s.columnStatus === col.id).length === 0 && (
+                  <div className="text-center py-10 text-slate-400 text-xs italic">
+                    No stories in this column
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ type InputProps = {
   label?: string;
   placeholder?: string;
   type?: string;
+  name?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
@@ -14,6 +15,7 @@ export const Input: React.FC<InputProps> = ({
   label, 
   placeholder, 
   type = 'text', 
+  name,
   value, 
   onChange, 
   error, 
@@ -24,6 +26,7 @@ export const Input: React.FC<InputProps> = ({
       {label && <label className="text-sm font-medium text-brand-blue-dark">{label}</label>}
       <input
         type={type}
+        name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}

@@ -3,6 +3,7 @@ package com.scrumboard.api.controller;
 import com.scrumboard.api.model.*;
 import com.scrumboard.api.service.ProjectService;
 import com.scrumboard.api.security.ProjectSecurityChecker;
+import com.scrumboard.api.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,24 +19,29 @@ import java.util.UUID;
 public class ProjectController {
     private final ProjectService projectService;
     private final ProjectSecurityChecker securityChecker;
+    private final UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<?> createProject(@Valid @RequestBody ProjectRequest request) {
         // Security: Get authenticated user from context
         String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
         
-        // Resolve username to UUID (Simplified for this phase)
-        UUID userId = UUID.randomUUID(); // In production, we'd use userRepository.findByUsername(username).getId()
+        // Resolve username to actual User ID
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found in database"));
         
-        Project project = projectService.createProject(request, userId);
+        Project project = projectService.createProject(request, user.getId());
         return ResponseEntity.ok(project);
     }
 
     @GetMapping("/my-projects")
     public ResponseEntity<List<Project>> getMyProjects() {
         String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
-        UUID userId = UUID.randomUUID(); // Simplified
-        return ResponseEntity.ok(projectService.getProjectsForUser(userId));
+        
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found in database"));
+                
+        return ResponseEntity.ok(projectService.getProjectsForUser(user.getId()));
     }
 
     @GetMapping("/{projectId}/members")

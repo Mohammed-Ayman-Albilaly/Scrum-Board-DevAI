@@ -1,3 +1,5 @@
+import apiClient from '../services/api';
+
 import React from 'react';
 import { Card, Button, Input } from '../components/ui';
 import { LogIn } from 'lucide-react';
@@ -24,10 +26,20 @@ const LoginPage: React.FC = () => {
     return true;
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    console.log('Login attempt:', { email, password });
+
+    try {
+      const response = await apiClient.post('/auth/login', { email, password });
+      if (response.status === 200) {
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+        window.location.href = '/dashboard';
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'An error occurred during login');
+    }
   };
 
   return (
