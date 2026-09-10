@@ -8,6 +8,7 @@ import ProductBacklog from './pages/backlog/ProductBacklog';
 import SprintPlanning from './pages/sprint/SprintPlanning';
 import ScrumBoard from './pages/board/ScrumBoard';
 import DeployedArchive from './pages/archive/DeployedArchive';
+import CeremonyLogs from './pages/ceremony-logs/CeremonyLogs';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
         <Route path="/sprint-planning" element={<SprintPlanning />} />
         <Route path="/board" element={<ScrumBoard />} />
         <Route path="/archive" element={<DeployedArchive />} />
+        <Route path="/ceremonies" element={<CeremonyLogs />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
