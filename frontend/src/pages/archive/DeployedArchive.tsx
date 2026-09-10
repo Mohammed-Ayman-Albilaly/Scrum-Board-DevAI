@@ -151,7 +151,7 @@ const DeployedArchive: React.FC = () => {
           )}
         </div>
       )}
-    </div
+    </div>
   );
 };
 
