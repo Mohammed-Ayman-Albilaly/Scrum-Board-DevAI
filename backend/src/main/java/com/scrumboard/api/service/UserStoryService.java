@@ -66,4 +66,13 @@ public class UserStoryService {
         story.setStatus(UserStory.StoryStatus.READY);
         return storyRepository.save(story);
     }
+
+    @Transactional
+    public UserStory transitionStory(UUID storyId, UserStory.ColumnStatus newStatus) {
+        UserStory story = storyRepository.findById(storyId)
+                .orElseThrow(() -> new RuntimeException("Story not found"));
+
+        story.setColumnStatus(newStatus);
+        return storyRepository.save(story);
+    }
 }

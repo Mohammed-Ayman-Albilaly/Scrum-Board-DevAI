@@ -66,4 +66,17 @@ public class UserStoryController {
         UserStory story = storyService.refineStory(storyId);
         return ResponseEntity.ok(story);
     }
+
+    @PatchMapping("/{storyId}/transition")
+    public ResponseEntity<?> transitionStory(@PathVariable UUID projectId, @PathVariable UUID storyId, @RequestParam UserStory.ColumnStatus status) {
+        if (!securityChecker.isMember(projectId)) {
+            throw new AccessDeniedException("You are not a member of this project");
+        }
+        
+        // Page 5 Security: TEAM_MEMBER and other roles can move stories within an active sprint.
+        // The project membership check above covers this.
+        
+        UserStory story = storyService.transitionStory(storyId, status);
+        return ResponseEntity.ok(story);
+    }
 }
