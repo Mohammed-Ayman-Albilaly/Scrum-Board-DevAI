@@ -1,7 +1,8 @@
 import React from 'react';
-import { Clock, Calendar, Eye, RefreshCw } from 'lucide-react';
+import { Clock, Calendar, Eye, RefreshCw, ArrowLeft } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
 
 const TABS = [
   { id: 'standup', label: 'Daily Standup', icon: <Clock size={18} /> },
@@ -99,10 +100,20 @@ const RetroLog: React.FC = () => {
 
 const CeremonyLogs: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState('standup');
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-brand-neutral-bg p-6 lg:p-10">
       <div className="max-w-7xl mx-auto">
+        <Button 
+          variant="ghost" 
+          className="flex items-center gap-2 mb-6 text-slate-500 hover:text-brand-blue" 
+          onClick={() => navigate('/dashboard')}
+        >
+          <ArrowLeft size={16} />
+          Back to Dashboard
+        </Button>
+
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-brand-blue-dark">Ceremony Logs</h1>
           <p className="text-slate-500">Review and track the outcomes of scrum ceremonies</p>

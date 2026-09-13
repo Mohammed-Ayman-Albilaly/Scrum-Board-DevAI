@@ -14,6 +14,7 @@ com\scrumboard\api\repository\ProjectMemberRepository.class
 com\scrumboard\api\security\JwtTokenProvider.class
 com\scrumboard\api\model\UserStoryRequest.class
 com\scrumboard\api\service\ProjectService.class
+com\scrumboard\api\config\WebConfig.class
 com\scrumboard\api\model\ProjectMember$ProjectRole.class
 com\scrumboard\api\repository\UserStoryRepository.class
 com\scrumboard\api\model\UserStoryV2$UserStoryV2Builder.class

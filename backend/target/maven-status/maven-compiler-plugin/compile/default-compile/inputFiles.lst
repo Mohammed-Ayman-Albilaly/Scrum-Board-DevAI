@@ -1,6 +1,7 @@
 C:\Users\ccis\Documents\MAB\Scrum-Board-DevAI\backend\src\main\java\com\scrumboard\api\security\JwtTokenProvider.java
 C:\Users\ccis\Documents\MAB\Scrum-Board-DevAI\backend\src\main\java\com\scrumboard\api\service\ProjectService.java
 C:\Users\ccis\Documents\MAB\Scrum-Board-DevAI\backend\src\main\java\com\scrumboard\api\repository\SprintRepository.java
+C:\Users\ccis\Documents\MAB\Scrum-Board-DevAI\backend\src\main\java\com\scrumboard\api\config\WebConfig.java
 C:\Users\ccis\Documents\MAB\Scrum-Board-DevAI\backend\src\main\java\com\scrumboard\api\model\LoginRequest.java
 C:\Users\ccis\Documents\MAB\Scrum-Board-DevAI\backend\src\main\java\com\scrumboard\api\model\ProjectRequest.java
 C:\Users\ccis\Documents\MAB\Scrum-Board-DevAI\backend\src\main\java\com\scrumboard\api\model\Project.java

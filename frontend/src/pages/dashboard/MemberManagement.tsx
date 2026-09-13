@@ -2,8 +2,9 @@ import React from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { User, ShieldCheck, UserPlus, Trash2, Users } from 'lucide-react';
+import { User, ShieldCheck, UserPlus, Trash2, Users, ArrowLeft } from 'lucide-react';
 import apiClient from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 
 type Role = 'PRODUCT_OWNER' | 'SCRUM_MASTER' | 'TEAM_MEMBER';
 
@@ -15,6 +16,7 @@ type Member = {
 };
 
 const MemberManagement: React.FC<{ projectId: string }> = ({ projectId }) => {
+  const navigate = useNavigate();
   const [members, setMembers] = React.useState<Member[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -50,7 +52,6 @@ const MemberManagement: React.FC<{ projectId: string }> = ({ projectId }) => {
   const handleRemoveMember = async (memberId: string) => {
     if (!window.confirm('Are you sure you want to remove this member?')) return;
     try {
-      // Backend expects: /api/projects/members/{memberId}
       await apiClient.delete(`/projects/members/${memberId}`);
       setMembers(members.filter(m => m.id !== memberId));
     } catch (err: any) {
@@ -60,15 +61,25 @@ const MemberManagement: React.FC<{ projectId: string }> = ({ projectId }) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-brand-blue-dark flex items-center gap-2">
-          <Users size={20} className="text-brand-green" />
-          Project Members
-        </h2>
-        <Button variant="primary" className="flex items-center gap-2" onClick={() => setIsModalOpen(true)}>
-          <UserPlus size={18} />
-          Add Member
+      <div className="flex flex-col gap-4">
+        <Button 
+          variant="ghost" 
+          className="flex items-center gap-2 w-fit text-slate-500 hover:text-brand-blue" 
+          onClick={() => navigate('/dashboard')}
+        >
+          <ArrowLeft size={16} />
+          Back to Dashboard
         </Button>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold text-brand-blue-dark flex items-center gap-2">
+            <Users size={20} className="text-brand-green" />
+            Project Members
+          </h2>
+          <Button variant="primary" className="flex items-center gap-2" onClick={() => setIsModalOpen(true)}>
+            <UserPlus size={18} />
+            Add Member
+          </Button>
+        </div>
       </div>
 
       {loading ? (

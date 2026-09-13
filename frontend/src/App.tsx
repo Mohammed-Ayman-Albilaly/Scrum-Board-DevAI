@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import LandingPage from './pages/LandingPage';
 import ProjectDashboard from './pages/dashboard/ProjectDashboard';
 import MemberManagement from './pages/dashboard/MemberManagement';
 import ProductBacklog from './pages/backlog/ProductBacklog';
@@ -29,7 +30,7 @@ const App: React.FC = () => {
         <Route path="/project/:projectId/board" element={<ScrumBoard />} />
         <Route path="/archive" element={<DeployedArchive />} />
         <Route path="/ceremonies" element={<CeremonyLogs />} />
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<LandingPage />} />
       </Routes>
     </Router>
   );

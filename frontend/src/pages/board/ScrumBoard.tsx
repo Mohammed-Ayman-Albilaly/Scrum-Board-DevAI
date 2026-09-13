@@ -7,10 +7,11 @@ import {
   ChevronLeft, 
   CheckCircle2, 
   Clock, 
-  LayoutGrid 
+  LayoutGrid,
+  ArrowLeft
 } from 'lucide-react';
 import apiClient from '../../services/api';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 type ColumnStatus = 'SPRINT_BACKLOG' | 'UNDER_DEVELOPMENT' | 'UNDER_TESTING' | 'DEPLOYED';
 
@@ -69,6 +70,7 @@ const BoardStoryCard: React.FC<{
 
 const ScrumBoard: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
   const [stories, setStories] = React.useState<UserStory[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -115,68 +117,79 @@ const ScrumBoard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-brand-neutral-bg p-6 lg:p-10">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-brand-green rounded-lg text-white">
-            <Kanban size={24} />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-brand-blue-dark">Scrum Board</h1>
-            <p className="text-slate-500 text-sm">Managing Project: {projectId}</p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-600">
-            <Clock size={14} />
-            Days Remaining: 7
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-medium text-emerald-700">
-            <CheckCircle2 size={14} />
-            Velocity: 12/20 pts
-          </div>
-        </div>
-      </header>
+      <div className="max-w-7xl mx-auto">
+        <Button 
+          variant="ghost" 
+          className="flex items-center gap-2 mb-6 text-slate-500 hover:text-brand-blue" 
+          onClick={() => navigate(`/project/${projectId}/backlog`)}
+        >
+          <ArrowLeft size={16} />
+          Back to Backlog
+        </Button>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <p className="text-slate-500">Loading stories...</p>
-        </div>
-      ) : error ? (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-center">
-          {error}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
-          {COLUMNS.map(col => (
-            <div key={col.id} className="flex flex-col h-full">
-              <div className={`flex items-center justify-between px-3 py-2 rounded-t-xl font-bold text-xs uppercase tracking-wider ${col.color}`}>
-                <div className="flex items-center gap-2">
-                  <LayoutGrid size={14} />
-                  {col.label}
-                </div>
-                <span className="bg-white/50 px-2 py-0.5 rounded-full">
-                  {stories.filter(s => s.columnStatus === col.id).length}
-                </span>
-              </div>
-              <div className="flex-1 bg-slate-200/30 p-3 rounded-b-xl overflow-y-auto space-y-3 border-x border-b border-slate-200">
-                {stories.filter(s => s.columnStatus === col.id).map(story => (
-                  <BoardStoryCard 
-                    key={story.id} 
-                    story={story} 
-                    onMove={moveStory} 
-                  />
-                ))}
-                {stories.filter(s => s.columnStatus === col.id).length === 0 && (
-                  <div className="text-center py-10 text-slate-400 text-xs italic">
-                    No stories in this column
-                  </div>
-                )}
-              </div>
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-brand-green rounded-lg text-white">
+              <Kanban size={24} />
             </div>
-          ))}
-        </div>
-      )}
+            <div>
+              <h1 className="text-3xl font-bold text-brand-blue-dark">Scrum Board</h1>
+              <p className="text-slate-500 text-sm">Managing Project: {projectId}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-600">
+              <Clock size={14} />
+              Days Remaining: 7
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-medium text-emerald-700">
+              <CheckCircle2 size={14} />
+              Velocity: 12/20 pts
+            </div>
+          </div>
+        </header>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <p className="text-slate-500">Loading stories...</p>
+          </div>
+        ) : error ? (
+          <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-center">
+            {error}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
+            {COLUMNS.map(col => (
+              <div key={col.id} className="flex flex-col h-full">
+                <div className={`flex items-center justify-between px-3 py-2 rounded-t-xl font-bold text-xs uppercase tracking-wider ${col.color}`}>
+                  <div className="flex items-center gap-2">
+                    <LayoutGrid size={14} />
+                    {col.label}
+                  </div>
+                  <span className="bg-white/50 px-2 py-0.5 rounded-full">
+                    {stories.filter(s => s.columnStatus === col.id).length}
+                  </span>
+                </div>
+                <div className="flex-1 bg-slate-200/30 p-3 rounded-b-xl overflow-y-auto space-y-3 border-x border-b border-slate-200">
+                  {stories.filter(s => s.columnStatus === col.id).map(story => (
+                    <BoardStoryCard 
+                      key={story.id} 
+                      story={story} 
+                      onMove={moveStory} 
+                    />
+                  ))}
+                  {stories.filter(s => s.columnStatus === col.id).length === 0 && (
+                    <div className="text-center py-10 text-slate-400 text-xs italic">
+                      No stories in this column
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

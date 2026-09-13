@@ -9,10 +9,11 @@ import {
   Trash2, 
   AlertCircle, 
   ChevronRight,
-  LayoutGrid
+  LayoutGrid,
+  ArrowLeft
 } from 'lucide-react';
 import apiClient from '../../services/api';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 type StoryStatus = 'UNREFINED' | 'READY';
 type ColumnStatus = 'SPRINT_BACKLOG' | 'UNDER_DEVELOPMENT' | 'UNDER_TESTING' | 'DEPLOYED';
@@ -80,6 +81,7 @@ const StoryCard: React.FC<{
 
 const ProductBacklog: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [userRole] = React.useState<'PRODUCT_OWNER' | 'TEAM_MEMBER'>('PRODUCT_OWNER');
   
@@ -142,123 +144,134 @@ const ProductBacklog: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-brand-neutral-bg p-6 lg:p-10">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-        <div>
-          <h1 className="text-3xl font-bold text-brand-blue-dark">Product Backlog</h1>
-          <p className="text-slate-500 mt-1">Prioritize and refine user stories for the project</p>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-600">
-            <span className="w-2 h-2 rounded-full bg-brand-green"></span>
-            Role: {userRole}
-          </div>
-          {userRole === 'PRODUCT_OWNER' && (
-            <Button variant="primary" className="flex items-center gap-2" onClick={() => setIsModalOpen(true)}>
-              <Plus size={20} />
-              Add Story
-            </Button>
-          )}
-        </div>
-      </header>
+      <div className="max-w-7xl mx-auto">
+        <Button 
+          variant="ghost" 
+          className="flex items-center gap-2 mb-6 text-slate-500 hover:text-brand-blue" 
+          onClick={() => navigate('/dashboard')}
+        >
+          <ArrowLeft size={16} />
+          Back to Dashboard
+        </Button>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <p className="text-slate-500">Loading backlog...</p>
-        </div>
-      ) : error ? (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-center">{error}</div>
-      ) : (
-        <div className="grid grid-cols-s1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-brand-blue-dark flex items-center gap-2">
-                <LayoutGrid size={20} className="text-brand-green" />
-                Prioritized Stories
-              </h2>
-              <div className="text-xs text-slate-400">
-                Total Stories: {stories.length}
-              </div>
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+          <div>
+            <h1 className="text-3xl font-bold text-brand-blue-dark">Product Backlog</h1>
+            <p className="text-slate-500 mt-1">Prioritize and refine user stories for the project</p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-600">
+              <span className="w-2 h-2 rounded-full bg-brand-green"></span>
+              Role: {userRole}
             </div>
-            {stories.map(story => (
-              <StoryCard 
-                key={story.id} 
-                story={story} 
-                isPO={userRole === 'PRODUCT_OWNER'} 
-                onEdit={(s) => handleUpdateStory(s)} 
-                onDelete={handleDeleteStory}
-              />
-            ))}
+            {userRole === 'PRODUCT_OWNER' && (
+              <Button variant="primary" className="flex items-center gap-2" onClick={() => setIsModalOpen(true)}>
+                <Plus size={20} />
+                Add Story
+              </Button>
+            )}
           </div>
+        </header>
 
-          <div className="space-y-6">
-            <Card className="p-5">
-              <h3 className="font-bold text-brand-blue-dark mb-4 flex items-center gap-2">
-                <AlertCircle size={18} className="text-brand-green" />
-                Backlog Insights
-              </h3>
-              <div className="space-y-4">
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                  <p className="text-xs text-slate-500 mb-1">Total Story Points</p>
-                  <p className="text-xl font-bold text-brand-blue-dark">{stories.reduce((acc, s) => acc + s.storyPoints, 0)} pts</p>
-                </div>
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                  <p className="text-xs text-slate-500 mb-1">Ready for Sprint</p>
-                  <p className="text-xl font-bold text-emerald-600">{stories.filter(s => s.status === 'READY').length} stories</p>
-                </div>
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                  <p className="text-xs text-slate-500 mb-1">Unrefined</p>
-                  <p className="text-xl font-bold text-orange-500">{stories.filter(s => s.status === 'UNREFINED').length} stories</p>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <p className="text-slate-500">Loading backlog...</p>
+          </div>
+        ) : error ? (
+          <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-center">{error}</div>
+        ) : (
+          <div className="grid grid-cols-s1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-brand-blue-dark flex items-center gap-2">
+                  <LayoutGrid size={20} className="text-brand-green" />
+                  Prioritized Stories
+                </h2>
+                <div className="text-xs text-slate-400">
+                  Total Stories: {stories.length}
                 </div>
               </div>
-            </Card>
-          </div>
-        </div>
-      )}
-
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-brand-blue-dark">Add New Story</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">✕</button>
-            </div>
-            <div className="p-6 space-y-4">
-              <Input label="Story Title" placeholder="As a user, I want to..." value={newStory.title} onChange={(e) => setNewStory({...newStory, title: e.target.value})} />
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-brand-blue-dark">Description</label>
-                <textarea 
-                  className="px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-white text-brand-blue-dark"
-                  rows={4}
-                  placeholder="Provide detailed acceptance criteria..."
-                  value={newStory.description}
-                  onChange={(e) => setNewStory({...newStory, description: e.target.value})}
+              {stories.map(story => (
+                <StoryCard 
+                  key={story.id} 
+                  story={story} 
+                  isPO={userRole === 'PRODUCT_OWNER'} 
+                  onEdit={(s) => handleUpdateStory(s)} 
+                  onDelete={handleDeleteStory}
                 />
+              ))}
+            </div>
+
+            <div className="space-y-6">
+              <Card className="p-5">
+                <h3 className="font-bold text-brand-blue-dark mb-4 flex items-center gap-2">
+                  <AlertCircle size={18} className="text-brand-green" />
+                  Backlog Insights
+                </h3>
+                <div className="space-y-4">
+                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <p className="text-xs text-slate-500 mb-1">Total Story Points</p>
+                    <p className="text-xl font-bold text-brand-blue-dark">{stories.reduce((acc, s) => acc + s.storyPoints, 0)} pts</p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <p className="text-xs text-slate-500 mb-1">Ready for Sprint</p>
+                    <p className="text-xl font-bold text-emerald-600">{stories.filter(s => s.status === 'READY').length} stories</p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <p className="text-xs text-slate-500 mb-1">Unrefined</p>
+                    <p className="text-xl font-bold text-orange-500">{stories.filter(s => s.status === 'UNREFINED').length} stories</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+              <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h2 className="text-xl font-bold text-brand-blue-dark">Add New Story</h2>
+                <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">✕</button>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Input label="Story Points" type="number" placeholder="5" value={newStory.storyPoints.toString()} onChange={(e) => setNewStory({...newStory, storyPoints: parseInt(e.target.value) || 0})} />
-                <Input label="Priority" type="number" placeholder="1" value={newStory.priority.toString()} onChange={(e) => setNewStory({...newStory, priority: parseInt(e.target.value) || 0})} />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-brand-blue-dark">Satus</label>
-                <select className="px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-brand-blue focus:ring-brand-blue bg-white text-brand-blue-dark" value={newStory.status} onChange={(e) => setNewStory({...newStory, status: e.target.value as StoryStatus})}>
-                  <option value="UNREFINED">Unrefined</option>
-                  <option value="READY">Ready</option>
-                </select>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <Button variant="ghost" className="flex-1" onClick={() => setIsModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button variant="primary" className="flex-1" onClick={handleCreateStory}>
-                  <Plus size={16} />
-                  Create Story
-                </Button>
+              <div className="p-6 space-y-4">
+                <Input label="Story Title" placeholder="As a user, I want to..." value={newStory.title} onChange={(e) => setNewStory({...newStory, title: e.target.value})} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-medium text-brand-blue-dark">Description</label>
+                  <textarea 
+                    className="px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-white text-brand-blue-dark"
+                    rows={4}
+                    placeholder="Provide detailed acceptance criteria..."
+                    value={newStory.description}
+                    onChange={(e) => setNewStory({...newStory, description: e.target.value})}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="Story Points" type="number" placeholder="5" value={newStory.storyPoints.toString()} onChange={(e) => setNewStory({...newStory, storyPoints: parseInt(e.target.value) || 0})} />
+                  <Input label="Priority" type="number" placeholder="1" value={newStory.priority.toString()} onChange={(e) => setNewStory({...newStory, priority: parseInt(e.target.value) || 0})} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-medium text-brand-blue-dark">Satus</label>
+                  <select className="px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-brand-blue focus:ring-brand-blue bg-white text-brand-blue-dark" value={newStory.status} onChange={(e) => setNewStory({...newStory, status: e.target.value as StoryStatus})}>
+                    <option value="UNREFINED">Unrefined</option>
+                    <option value="READY">Ready</option>
+                  </select>
+                </div>
+                <div className="flex gap-3 pt-4">
+                  <Button variant="ghost" className="flex-1" onClick={() => setIsModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" className="flex-1" onClick={handleCreateStory}>
+                    <Plus size={16} />
+                    Create Story
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
