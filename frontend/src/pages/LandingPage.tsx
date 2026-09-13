@@ -138,11 +138,11 @@ const LandingPage: React.FC = () => {
             © {new Date().getFullYear()} ScrumFlow Inc. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-gray-400 hover:text-brand-blue transition-colors text-sm">Privacy Policy</a>
-            <a href="#" className="text-gray-400 hover:text-brand-blue transition-colors text-sm">Terms of Service</a>
+            <button onClick={() => {}} className="text-gray-400 hover:text-brand-blue transition-colors text-sm">Privacy Policy</button>
+            <button onClick={() => {}} className="text-gray-400 hover:text-brand-blue transition-colors text-sm">Terms of Service</button>
           </div>
         </div>
-      </footer>
+      </footer}
     </div>
   );
 };
