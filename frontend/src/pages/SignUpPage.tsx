@@ -60,6 +60,9 @@ const SignUpPage: React.FC = () => {
           <p className="text-slate-500 text-center mt-2">
             Start organizing your scrum process today
           </p>
+          <a href="/" className="mt-4 text-sm text-brand-blue hover:underline flex items-center gap-1">
+            ← Back to Home
+          </a>
         </div>
 
         <form onSubmit={handleSignUp} className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -100,7 +103,7 @@ const SignUpPage: React.FC = () => {
           />
           
           <div className="col-span-full pt-4">
-            <Button className="w-full py-3">
+            <Button type="submit" className="w-full py-3">
               Create Account
             </Button>
           </div>

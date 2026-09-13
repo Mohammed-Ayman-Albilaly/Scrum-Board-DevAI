@@ -53,6 +53,9 @@ const LoginPage: React.FC = () => {
           <p className="text-slate-500 text-center mt-2">
             Manage your agricultural projects with precision
           </p>
+          <a href="/" className="mt-4 text-sm text-brand-blue hover:underline flex items-center gap-1">
+            ← Back to Home
+          </a>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -83,7 +86,7 @@ const LoginPage: React.FC = () => {
             <a href="/forgot-password" className="text-brand-blue hover:underline">Forgot password?</a>
           </div>
 
-          <Button className="w-full py-3">
+          <Button type="submit" className="w-full py-3">
             Sign In
           </Button>
         </form>
