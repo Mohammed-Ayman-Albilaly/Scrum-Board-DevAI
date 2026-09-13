@@ -1,0 +1,27 @@
+Improve the frontend UX and navigation of the application by implementing the following:
+
+1. Landing Page
+Build a modern, responsive landing page as the system entry point. It must include:
+
+A hero section with a strong headline, short description, and primary ("Get Started"/"Sign Up") and secondary ("Log In") CTAs.
+A section explaining main features/capabilities.
+A "How it works" or system overview section.
+A professional, SaaS-style design that aligns with existing branding and color palettes.
+Subtle animations and transitions to enhance the experience.
+2. Authentication Navigation
+Integrate the landing page with the existing authentication flow:
+
+Provide clear paths from the Landing Page to the Login and Signup pages.
+Ensure users are redirected to the appropriate application area after authentication.
+Do not break or replace existing authentication logic; only improve the UI/navigation.
+3. Global Back Navigation
+Audit the application and resolve the lack of "back" navigation:
+
+Add visible "Back" buttons with icons on pages where users can get stuck.
+Use router history for navigation where appropriate to ensure the flow is logical regardless of the entry route.
+Ensure consistent wording (e.g., "← Back" or "← Back to Dashboard") and styling across the app.
+4. Implementation Requirements
+Audit: Before implementing, analyze existing routing, user flows, and UI components to ensure the new additions feel native and reuse existing components.
+UX Standards: Ensure high production quality regarding visual hierarchy, spacing, typography, responsiveness, accessibility, and hover/focus states.
+Integration: Fully integrate the landing page into the app flow: Landing Page → Login/Signup → Application → Internal Pages → Back Navigation.
+Preservation: Maintain all existing functionality and business logic.
