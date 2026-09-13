@@ -142,7 +142,7 @@ const LandingPage: React.FC = () => {
             <button onClick={() => {}} className="text-gray-400 hover:text-brand-blue transition-colors text-sm">Terms of Service</button>
           </div>
         </div>
-      </footer}
+      </footer>
     </div>
   );
 };
